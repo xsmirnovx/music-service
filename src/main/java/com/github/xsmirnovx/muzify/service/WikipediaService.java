@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-import static com.github.xsmirnovx.muzify.dto.MusicBrainzResponseDTO.*;
-import static com.github.xsmirnovx.muzify.dto.MusicBrainzResponseDTO.RelationDTO.*;
-import static com.github.xsmirnovx.muzify.dto.WikidataResponseDTO.*;
-import static com.github.xsmirnovx.muzify.dto.WikidataResponseDTO.EntityDTO.*;
+import static com.github.xsmirnovx.muzify.dto.MusicBrainzResponseDTO.RelationDTO;
+import static com.github.xsmirnovx.muzify.dto.MusicBrainzResponseDTO.RelationDTO.UrlDTO;
+import static com.github.xsmirnovx.muzify.dto.WikidataResponseDTO.EntityDTO;
+import static com.github.xsmirnovx.muzify.dto.WikidataResponseDTO.EntityDTO.SiteLinkDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -22,14 +22,13 @@ public class WikipediaService {
 
     private final WikipediaClient wikipediaClient;
     private final WikidataClient wikidataClient;
-
     private final CircuitBreakerFactory<?, ?> cbFactory;
 
     @Async
     public CompletableFuture<String> getArtistDescription(MusicBrainzResponseDTO response) {
         var wikiExtract = extractWikidataUrl(response)
                 .flatMap(this::getTitleFromWikidata)
-                .map(this::getWikiExtract)
+                .map(this::getExtractFromWikipedia)
                 .orElse("<cannot get description>");
 
         return CompletableFuture.completedFuture(wikiExtract);
@@ -62,7 +61,7 @@ public class WikipediaService {
                 .map(SiteLinkDTO::getTitle);
     }
 
-    private String getWikiExtract(String title) {
+    private String getExtractFromWikipedia(String title) {
         return cbFactory.create("wikipedia").run(() -> wikipediaClient.getSummary(title),
                 throwable -> WikipediaResponseDTO.builder().build()).getExtract();
     }
