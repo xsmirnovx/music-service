@@ -2,6 +2,8 @@ package com.github.xsmirnovx.muzify.service;
 
 import com.github.xsmirnovx.muzify.dto.ArtistInfoDTO.*;
 import com.github.xsmirnovx.muzify.dto.MusicBrainzResponseDTO;
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
 import io.vavr.collection.Stream;
 import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +25,10 @@ public class AlbumsService {
     @Async
     public CompletableFuture<Set<AlbumDTO>> getAlbums(MusicBrainzResponseDTO response) {
         var albums = extractAlbums(response);
-        var images = getImages(albums);
-        var albumsWithImages = Stream.ofAll(images.stream())
-                .zipWith(albums, (img, album) -> album.withImageUrl(img))
-                .toJavaSet();
+        var albumsWithImages = getAlbumsWithImages(albums);
+//        var albumsWithImages = Stream.ofAll(images.stream())
+//                .zipWith(albums, (img, album) -> album.withImageUrl(img))
+//                .toJavaSet();
 
         return CompletableFuture.completedFuture(albumsWithImages);
     }
@@ -42,17 +44,19 @@ public class AlbumsService {
                 .collect(Collectors.toUnmodifiableSet());
     }
 
-    public Set<String> getImages(Set<AlbumDTO> albums) {
+    private Set<AlbumDTO> getAlbumsWithImages(Set<AlbumDTO> albums) {
 
         var futureImages = albums.stream()
-                .map(AlbumDTO::getId)
-                .map(coverArtService::getFrontImage)
+                //.map(AlbumDTO::getId)
+                .map(album -> Tuple.of(album, coverArtService.getFrontImage(album.getId())))
                 .collect(Collectors.toUnmodifiableSet());
 
-        CompletableFuture.allOf(futureImages.toArray(new CompletableFuture<?>[] {})).join();
+        CompletableFuture
+                .allOf(futureImages.stream().map(Tuple2::_2).collect(Collectors.toUnmodifiableSet())
+                        .toArray(new CompletableFuture<?>[] {})).join();
 
         return futureImages.stream()
-                .map(this::getImageOrStubMessage)
+                .map(t -> t._1.withImageUrl(getImageOrStubMessage(t._2)))
                 .collect(Collectors.toUnmodifiableSet());
     }
 

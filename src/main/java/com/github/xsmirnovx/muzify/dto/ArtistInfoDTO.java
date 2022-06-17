@@ -26,6 +26,7 @@ public class ArtistInfoDTO {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
+    @EqualsAndHashCode
     public static class AlbumDTO {
         private UUID id;
         private String title;

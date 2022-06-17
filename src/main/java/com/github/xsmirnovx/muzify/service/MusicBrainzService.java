@@ -19,7 +19,5 @@ public class MusicBrainzService {
         return cbFactory.create("music-brainz")
                 .run(() -> musicBrainzClient.get(mbid, "json", "url-rels+release-groups"),
                         throwable -> MusicBrainzResponseDTO.builder().build());
-
-        //return musicBrainzClient.get(mbid, "json", "url-rels+release-groups");
     }
 }

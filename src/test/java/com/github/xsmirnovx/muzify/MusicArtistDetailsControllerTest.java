@@ -17,6 +17,8 @@ import java.util.*;
 
 import static com.github.xsmirnovx.muzify.dto.WikidataResponseDTO.*;
 import static com.github.xsmirnovx.muzify.dto.CoverArtResponseDTO.*;
+import static com.github.xsmirnovx.muzify.dto.MusicBrainzResponseDTO.*;
+import static com.github.xsmirnovx.muzify.dto.MusicBrainzResponseDTO.RelationDTO.UrlDTO;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,6 +41,19 @@ public class MusicArtistDetailsControllerTest {
         var result = mockMvc.perform(get("/musify/music-artist/details/{mbid}", testMbid))
                 .andExpect(status().isOk())
                 .andReturn();
+
+        var content = result.getResponse().getContentAsString();
+        var ai = objectMapper.readValue(content, ArtistInfoDTO.class);
+
+        assert ai.getMbid().equals(testMbid);
+        assert ai.getGender().equals("gender");
+        assert ai.getCountry().equals("country");
+        assert ai.getDisambiguation().equals("disambiguation");
+        assert ai.getDescription().equals("description");
+        assert ai.getAlbums().contains(ArtistInfoDTO.AlbumDTO.builder()
+                        .title("release 2")
+                        .imageUrl("front image")
+                        .build());
     }
 
     @BeforeEach
@@ -50,8 +65,28 @@ public class MusicArtistDetailsControllerTest {
                         .gender("gender")
                         .disambiguation("disambiguation")
                         .name("name")
-                        .relations(Set.of())
-                        .releaseGroups(Set.of())
+                        .relations(Set.of(
+                                RelationDTO.builder()
+                                    .type("wikidata")
+                                    .url(UrlDTO.builder().resource("http://wikidata.com/wdid").build())
+                                    .build(),
+                                RelationDTO.builder()
+                                     .type("other")
+                                     .url(UrlDTO.builder().resource("http://other.com/oid").build())
+                                     .build()
+                                )
+                        )
+                        .releaseGroups(Set.of(
+                                ReleaseGroupDTO.builder()
+                                    .id(UUID.randomUUID())
+                                    .title("release 1")
+                                    .build(),
+                                ReleaseGroupDTO.builder()
+                                    .id(UUID.randomUUID())
+                                    .title("release 2")
+                                    .build()
+                                )
+                        )
                         .build());
 
         Mockito.when(coverArtClient.getCovers(Mockito.any()))
@@ -72,10 +107,10 @@ public class MusicArtistDetailsControllerTest {
 
         Mockito.when(wikidataClient.get(Mockito.any()))
                 .thenReturn(WikidataResponseDTO.builder()
-                        .entities(Map.of("id", EntityDTO.builder().sitelinks(Map.of("enwiki", EntityDTO.SiteLinkDTO.builder().title("title").build())).build()))
+                        .entities(Map.of("wdid", EntityDTO.builder().sitelinks(Map.of("enwiki", EntityDTO.SiteLinkDTO.builder().title("title").build())).build()))
                         .build());
 
         Mockito.when(wikipediaClient.getSummary(Mockito.any()))
-                .thenReturn(new WikipediaResponseDTO("wiki extract"));
+                .thenReturn(new WikipediaResponseDTO("description"));
     }
 }
