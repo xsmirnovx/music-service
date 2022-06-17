@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(url = "${wikidata.api}", value = "wikidata")
 public interface WikidataClient {
+
     @GetMapping("/{id}.json")
     WikidataResponseDTO get(@PathVariable("id") String id);
 }

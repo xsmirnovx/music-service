@@ -29,8 +29,7 @@ public class MusicArtistDetailsService {
         var wikiExtract = Try.of(futureWikiExtract::get).getOrElse("<failed to get description>");
         var albumsWithImages = Try.of(futureAlbumsWithImages::get).getOrElse(Set::of);
 
-        return ArtistInfoDTO
-                .builder()
+        return ArtistInfoDTO.builder()
                 .mbid(mbid)
                 .name(musicBrainzResponse.getName())
                 .gender(musicBrainzResponse.getGender())

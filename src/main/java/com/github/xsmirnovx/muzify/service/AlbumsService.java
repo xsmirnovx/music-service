@@ -46,7 +46,7 @@ public class AlbumsService {
 
         var futureImages = albums.stream()
                 .map(AlbumDTO::getId)
-                .map(coverArtService::getImage)
+                .map(coverArtService::getFrontImage)
                 .collect(Collectors.toUnmodifiableSet());
 
         CompletableFuture.allOf(futureImages.toArray(new CompletableFuture<?>[] {})).join();

@@ -20,14 +20,14 @@ public class MusicServiceApplication {
 		SpringApplication.run(MusicServiceApplication.class, args);
 	}
 
-	@Bean
-	public Executor taskExecutor() {
-		var executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(2);
-		executor.setMaxPoolSize(5);
-		executor.setQueueCapacity(500);
-		executor.setThreadNamePrefix("MusicService-");
-		executor.initialize();
-		return executor;
-	}
+//	@Bean
+//	public Executor taskExecutor() {
+//		var executor = new ThreadPoolTaskExecutor();
+//		executor.setCorePoolSize(2);
+//		executor.setMaxPoolSize(5);
+//		executor.setQueueCapacity(500);
+//		executor.setThreadNamePrefix("MusicService-");
+//		executor.initialize();
+//		return executor;
+//	}
 }

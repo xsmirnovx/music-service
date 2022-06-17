@@ -24,7 +24,7 @@ public class MusicArtistDetailsController {
     public ArtistInfoDTO getMusicArtistDetails(@PathVariable UUID mbid) {
         var start = System.currentTimeMillis();
         var res = musicArtistDetailsService.getMusicArtistDetails(mbid);
-        log.info("duration: {}s", (System.currentTimeMillis() - start) / 1000);
+        log.info("response time: {}s", (System.currentTimeMillis() - start) / 1000);
         return res;
     }
 }
