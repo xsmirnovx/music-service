@@ -15,10 +15,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.*;
 
+
 import static com.github.xsmirnovx.muzify.dto.WikidataResponseDTO.*;
 import static com.github.xsmirnovx.muzify.dto.CoverArtResponseDTO.*;
 import static com.github.xsmirnovx.muzify.dto.MusicBrainzResponseDTO.*;
 import static com.github.xsmirnovx.muzify.dto.MusicBrainzResponseDTO.RelationDTO.UrlDTO;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,25 +37,34 @@ public class MusicArtistDetailsControllerTest {
     @MockBean private WikipediaClient wikipediaClient;
 
     private final UUID testMbid = UUID.randomUUID();
+    private final UUID releaseGroupId1 = UUID.randomUUID();
+    private final UUID releaseGroupId2 = UUID.randomUUID();
 
     @Test
-    public void test() throws Exception {
+    public void test_getMusicArtistDetails() throws Exception {
         var result = mockMvc.perform(get("/musify/music-artist/details/{mbid}", testMbid))
                 .andExpect(status().isOk())
                 .andReturn();
 
         var content = result.getResponse().getContentAsString();
-        var ai = objectMapper.readValue(content, ArtistInfoDTO.class);
+        var musicArtistDetails = objectMapper.readValue(content, ArtistInfoDTO.class);
 
-        assert ai.getMbid().equals(testMbid);
-        assert ai.getGender().equals("gender");
-        assert ai.getCountry().equals("country");
-        assert ai.getDisambiguation().equals("disambiguation");
-        assert ai.getDescription().equals("description");
-        assert ai.getAlbums().contains(ArtistInfoDTO.AlbumDTO.builder()
-                        .title("release 2")
-                        .imageUrl("front image")
-                        .build());
+        assertEquals("gender", musicArtistDetails.getGender());
+        assertEquals("country", musicArtistDetails.getCountry());
+        assertEquals("disambiguation",  musicArtistDetails.getDisambiguation());
+        assertEquals("description", musicArtistDetails.getDescription());
+
+        assertTrue(musicArtistDetails.getAlbums().contains(ArtistInfoDTO.AlbumDTO.builder()
+                .id(releaseGroupId1)
+                .title("release 1")
+                .imageUrl("front image")
+                .build()));
+
+        assertTrue(musicArtistDetails.getAlbums().contains(ArtistInfoDTO.AlbumDTO.builder()
+                .id(releaseGroupId2)
+                .title("release 2")
+                .imageUrl("front image")
+                .build()));
     }
 
     @BeforeEach
@@ -78,11 +89,11 @@ public class MusicArtistDetailsControllerTest {
                         )
                         .releaseGroups(Set.of(
                                 ReleaseGroupDTO.builder()
-                                    .id(UUID.randomUUID())
+                                    .id(releaseGroupId1)
                                     .title("release 1")
                                     .build(),
                                 ReleaseGroupDTO.builder()
-                                    .id(UUID.randomUUID())
+                                    .id(releaseGroupId2)
                                     .title("release 2")
                                     .build()
                                 )
