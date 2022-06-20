@@ -1,6 +1,6 @@
 # How to Run
-`./mvnw spring-boot:run`
-`curl -X GET "http://localhost:8081/musify/music-artist/details/71fdb598-1967-435b-ab25-f4daad5e576b"`
+- `./mvnw spring-boot:run`
+- `curl -X GET "http://localhost:8081/musify/music-artist/details/71fdb598-1967-435b-ab25-f4daad5e576b"`
 
 - Lombok to eliminate boilerplate code
 - FeignClient as http client, since I'm mostly used to it
