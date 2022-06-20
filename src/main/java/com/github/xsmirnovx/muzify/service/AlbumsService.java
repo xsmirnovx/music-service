@@ -1,6 +1,6 @@
 package com.github.xsmirnovx.muzify.service;
 
-import com.github.xsmirnovx.muzify.dto.ArtistInfoDTO.*;
+import com.github.xsmirnovx.muzify.dto.MusicArtistDetailsDTO.*;
 import com.github.xsmirnovx.muzify.dto.MusicBrainzResponseDTO;
 import io.vavr.*;
 import io.vavr.control.Try;
@@ -29,7 +29,7 @@ public class AlbumsService {
     }
 
     private Set<AlbumDTO> extractAlbums(MusicBrainzResponseDTO response) {
-        return Optional.of(response.getReleaseGroups())
+        return Optional.ofNullable(response.getReleaseGroups())
                 .stream()
                 .flatMap(Collection::stream)
                 .map(group -> AlbumDTO.builder()

@@ -1,6 +1,6 @@
 package com.github.xsmirnovx.muzify.controller;
 
-import com.github.xsmirnovx.muzify.dto.ArtistInfoDTO;
+import com.github.xsmirnovx.muzify.dto.MusicArtistDetailsDTO;
 import com.github.xsmirnovx.muzify.service.MusicArtistDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +21,7 @@ public class MusicArtistDetailsController {
 
     @GetMapping(value = "/music-artist/details/{mbid}", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public ArtistInfoDTO getMusicArtistDetails(@PathVariable UUID mbid) {
-        var start = System.currentTimeMillis();
-        var res = musicArtistDetailsService.getMusicArtistDetails(mbid);
-        log.info("response time: {}s", (System.currentTimeMillis() - start) / 1000);
-        return res;
+    public MusicArtistDetailsDTO getMusicArtistDetails(@PathVariable UUID mbid) {
+        return musicArtistDetailsService.getMusicArtistDetails(mbid);
     }
 }
