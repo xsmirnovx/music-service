@@ -10,7 +10,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArtistInfoDTO {
+public class MusicArtistDetailsDTO {
 
     private UUID mbid;
     private String name;

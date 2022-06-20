@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.github.xsmirnovx.muzify.dto.MusicBrainzResponseDTO.ReleaseGroupDTO;
-import static com.github.xsmirnovx.muzify.dto.ArtistInfoDTO.AlbumDTO;
+import static com.github.xsmirnovx.muzify.dto.MusicArtistDetailsDTO.AlbumDTO;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest

@@ -47,20 +47,20 @@ public class MusicArtistDetailsControllerTest {
                 .andReturn();
 
         var content = result.getResponse().getContentAsString();
-        var musicArtistDetails = objectMapper.readValue(content, ArtistInfoDTO.class);
+        var musicArtistDetails = objectMapper.readValue(content, MusicArtistDetailsDTO.class);
 
         assertEquals("gender", musicArtistDetails.getGender());
         assertEquals("country", musicArtistDetails.getCountry());
         assertEquals("disambiguation",  musicArtistDetails.getDisambiguation());
         assertEquals("description", musicArtistDetails.getDescription());
 
-        assertTrue(musicArtistDetails.getAlbums().contains(ArtistInfoDTO.AlbumDTO.builder()
+        assertTrue(musicArtistDetails.getAlbums().contains(MusicArtistDetailsDTO.AlbumDTO.builder()
                 .id(releaseGroupId1)
                 .title("release 1")
                 .imageUrl("front image")
                 .build()));
 
-        assertTrue(musicArtistDetails.getAlbums().contains(ArtistInfoDTO.AlbumDTO.builder()
+        assertTrue(musicArtistDetails.getAlbums().contains(MusicArtistDetailsDTO.AlbumDTO.builder()
                 .id(releaseGroupId2)
                 .title("release 2")
                 .imageUrl("front image")
