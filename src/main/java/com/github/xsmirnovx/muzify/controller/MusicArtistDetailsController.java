@@ -22,9 +22,6 @@ public class MusicArtistDetailsController {
     @GetMapping(value = "/music-artist/details/{mbid}", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public MusicArtistDetailsDTO getMusicArtistDetails(@PathVariable UUID mbid) {
-        var start = System.currentTimeMillis();
-        var res = musicArtistDetailsService.getMusicArtistDetails(mbid);
-        log.info("response time: {}s", (System.currentTimeMillis() - start) / 1000);
-        return res;
+        return musicArtistDetailsService.getMusicArtistDetails(mbid);
     }
 }
