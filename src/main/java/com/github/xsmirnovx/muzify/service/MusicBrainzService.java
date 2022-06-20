@@ -2,7 +2,6 @@ package com.github.xsmirnovx.muzify.service;
 
 import com.github.xsmirnovx.muzify.client.MusicBrainzClient;
 import com.github.xsmirnovx.muzify.dto.MusicBrainzResponseDTO;
-//import feign.FeignException;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
